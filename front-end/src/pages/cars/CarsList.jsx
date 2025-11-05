@@ -11,6 +11,7 @@ import Button from '@mui/material/Button'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 
 import { feedbackWait, feedbackConfirm, feedbackNotify } from '../../ui/Feedback'
+import fetchAuth from '../../lib/fetchAuth'
 
 export default function CarsList() {
 
@@ -111,8 +112,7 @@ export default function CarsList() {
   async function loadData() {
     feedbackWait(true)
     try {
-      const response = await fetch(import.meta.env.VITE_API_BASE + '/cars')
-      const data = await response.json()
+      const data = await fetchAuth.get('/cars')
 
       // Atualiza a variável de estado com os dados obtidos
       setState({ ...state, cars: data })
@@ -136,9 +136,8 @@ export default function CarsList() {
       feedbackWait(true)
       try {
         // Envia a requisição para a exclusão do registro
-        await fetch(import.meta.env.VITE_API_BASE + `/cars/${id}`,
-          { method: 'DELETE' }
-        )
+        await fetchAuth.delete(`/cars/${id}`)
+        
         // Atualiza os dados do datagrid
         loadData()
         feedbackNotify('Exclusão efetuada com sucesso.')
